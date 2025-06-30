@@ -1,0 +1,4 @@
+2025-06-22_200000__1.txt	  Number of steps:65839	 Steps accepted:24290	 acc = 0.37	min(-loglike) = 11.64
+--> Total    number    of    steps: 65839
+--> Total number of accepted steps: 24290
+--> Minimum of -logLike           : 11.64

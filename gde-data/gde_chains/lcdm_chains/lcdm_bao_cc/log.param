@@ -1,0 +1,104 @@
+#-----CLASS v3.3.0 (branch: , hash: )-----
+
+#------Experiments to test (separated with commas)-----
+# To see all the available ones, please look in the
+# montepython/likelihoods folder. Every folder there is a valid likelihood to
+# test.
+data.experiments=['bao_dr2','bbn_omegab','CC']
+#data.experiments=['wmap','spt']
+
+#------ Parameter list -------
+# data.parameters[class name] = [mean, min, max, 1-sigma, scale, role]
+# - if min max irrelevant, put to -1 or None (if you want a boundary of -1, use -1.0)
+# - if fixed, put 1-sigma to 0
+# - if scale irrelevant, put to 1, otherwise to the appropriate factor
+# - role is either 'cosmo', 'nuisance' or 'derived'
+
+
+# Cosmological parameters list
+data.parameters['omega_b'] 	= [2.249,  -1,-1, 0.016, 0.01,'cosmo']
+data.parameters['omega_cdm'] 	= [0.1180, -1,-1, 0.0016,1,   'cosmo']
+#data.parameters['n_s']       	= [0.963,  -1,-1, 0.004, 1,   'cosmo']
+#data.parameters['A_s']       	= [2.42,   -1,-1, 0.038, 1e-9,'cosmo']
+data.parameters['h']         	= [0.683,  -1,-1, 0.0065,1,   'cosmo']
+#data.parameters['tau_reio']    	= [0.085,  -1,-1, 0.0044,1,   'cosmo']
+
+# Nuisance parameter list, same call, except the name does not have to be a class name
+# Note the nuisance parameters must follow *immediately after* the cosmo parameters,
+# MP expects cosmo, nuisance, derived
+
+# For wmap:
+#data.parameters['A_SZ']         = [1,    0, 2,   1, 1,  'nuisance']
+# For SPT
+#data.parameters['SPT_SZ']       = [5.6,  0,-1, 2.5, 1,  'nuisance']
+#data.parameters['SPT_PS']       = [20.4,-1,-1, 2.7, 1, 'nuisance']
+#data.parameters['SPT_CL']       = [5.3, -1,-1, 2.3, 1, 'nuisance']
+
+# Derived parameter list
+data.parameters['S8']          = [0, None, None, 0,     1,   'derived']
+data.parameters['Omega_m']          = [0, None, None, 0,     1,   'derived']
+data.parameters['H0']              = [0, None, None, 0,     1,   'derived']
+data.cosmo_arguments['N_ur'] = 2.0328
+data.cosmo_arguments['N_ncdm'] = 1
+data.cosmo_arguments['m_ncdm'] = 0.06
+data.cosmo_arguments['T_ncdm'] = 0.71611
+
+
+# These two are required to get sigma8 as a derived parameter
+# (class must compute the P(k) until sufficient k)
+data.cosmo_arguments['output'] = 'mPk'
+data.cosmo_arguments['P_k_max_h/Mpc'] = 1.
+
+
+#------ Mcmc parameters ----
+# Number of steps taken, by default (overwritten by the -N command)
+data.N=10
+# Number of accepted steps before writing to file the chain. Larger means less
+# access to disc, but this is not so much time consuming.
+data.write_step=5
+
+
+# Note: MP will only interpret comments if the line begins with # (you cannot add comments at the end of lines!)
+
+
+#-----Likelihood-bao_dr2-----
+bao_dr2.data_directory = '/home/zhou/workspace/montepython_public-3.6/data'
+bao_dr2.data_file = 'DESI_DR2/desi_data.txt'
+bao_dr2.cov_file = 'DESI_DR2/desi_gaussian_bao_ALL_GCcomb_cov.txt'
+
+
+#-----Likelihood-bbn_omegab-----
+bbn_omegab.include_bbn_type = 'yp,dh'
+bbn_omegab.usedata = 'parthenope'
+bbn_omegab.data_directory = 'data/bbn'
+bbn_omegab.parthenopefile = 'PArthENoPE_880.2_standard_lewis.dat'
+bbn_omegab.marcuccifile = 'PArthENoPE_880.2_marcucci_lewis.dat'
+bbn_omegab.primatfile = 'PRIMAT_Yp_DH_Error.dat'
+bbn_omegab.two_sig_neutron_lifetime = 0.0006
+bbn_omegab.two_sig_dh_parth = 0.12
+bbn_omegab.two_sig_dh_marcucci = 0.06
+bbn_omegab.dh_cooke_mean = 2.527
+bbn_omegab.dh_cooke_one_sig = 0.03
+bbn_omegab.yp_measurement_type = 'aver'
+bbn_omegab.yp_cooke_mean = 0.25
+bbn_omegab.yp_cooke_one_sig_p = 0.033
+bbn_omegab.yp_cooke_one_sig_m = 0.025
+bbn_omegab.yp_means = {'aver2015': 0.2449, 'peimbert2016': 0.2446, 'izotov2014': 0.2551}
+bbn_omegab.yp_sigs = {'aver2015': 0.004, 'peimbert2016': 0.0029, 'izotov2014': 0.0022}
+bbn_omegab.Neff0 = 3.046
+
+
+#-----Likelihood-CC-----
+CC.data = 0.01
+
+
+#-----------Cosmological-arguments---------
+data.cosmo_arguments.update({'N_ur': 2.0328, 'N_ncdm': 1, 'm_ncdm': 0.06, 'T_ncdm': 0.71611, 'output': 'mPk', 'P_k_max_h/Mpc': 1.0})
+
+
+#--------Default-Configuration------
+data.path['root']	= '/home/zhou/workspace/montepython_public-3.6'
+data.path['MontePython']	= '/home/zhou/workspace/montepython_public-3.6/montepython'
+data.path['data']	= '/home/zhou/workspace/montepython_public-3.6/data'
+data.path['cosmo']	= '/home/zhou/workspace/class_public-master_env'
+data.path['clik']	= '/home/zhou/workspace/plc2018/code/plc_3.0/plc-3.1'

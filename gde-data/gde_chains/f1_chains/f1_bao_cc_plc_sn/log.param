@@ -1,0 +1,136 @@
+#-----CLASS v3.3.0 (branch: , hash: )-----
+
+#------Experiments to test (separated with commas)-----
+
+#data.experiments=['Planck_highl_TTTEEE_lite', 'Planck_lowl_EE', 'Planck_lowl_TT','bao_dr2','bbn_omegab']
+data.experiments=[ 'Planck_highl_TTTEEE_lite','Planck_lowl_EE', 'Planck_lowl_TT','bao_dr2','Pantheon_Plus','CC']
+#------ Settings for the over-sampling.
+# The first element will always be set to 1, for it is the sampling of the
+# cosmological parameters. The other numbers describe the over sampling of the
+# nuisance parameter space. This array must have the same dimension as the
+# number of blocks in your run (so, 1 for cosmological parameters, and then 1
+# for each experiment with varying nuisance parameters).
+# Note that when using Planck likelihoods, you definitely want to use [1, 4],
+# to oversample as much as possible the 14 nuisance parameters.
+# Remember to order manually the experiments from slowest to fastest (putting
+# Planck as the first set of experiments should be a safe bet, except if you
+# also have LSS experiments).
+# If you have experiments without nuisance, you do not need to specify an
+# additional entry in the over_sampling list (notice for instance that, out of
+# the three Planck likelihoods used, only Planck_highl requires nuisance
+# parameters, therefore over_sampling has a length of two (cosmology, plus one
+# set of nuisance).
+data.over_sampling=[1, 10, 1]
+
+#------ Parameter list -------
+
+# data.parameters[class name] = [mean, min, max, 1-sigma, scale, role]
+# - if min max irrelevant, put to None
+# - if fixed, put 1-sigma to 0
+# - if scale irrelevant, put to 1, otherwise to the appropriate factor
+# - role is either 'cosmo', 'nuisance' or 'derived'. You should put the derived
+# parameters at the end, and in case you are using the `-j fast` Cholesky
+# decomposition, you should order your nuisance parameters from slowest to
+# fastest.
+
+# Cosmological parameters list
+
+data.parameters['omega_b']      = [  2.2377,   None, None,      0.015, 0.01, 'cosmo']
+data.parameters['omega_cdm']    = [ 0.11810,   None, None,    0.0013,    1, 'cosmo']
+data.parameters['100*theta_s']  = [ 1.04110,   None, None,    0.00030,    1, 'cosmo']
+data.parameters['ln10^{10}A_s'] = [  3.0447,   None, None,      0.015,    1, 'cosmo']
+data.parameters['n_s']          = [  0.9659,   None, None,     0.0042,    1, 'cosmo']
+data.parameters['tau_reio']     = [  0.0543,  0.0043, 0.08,      0.008,    1, 'cosmo']
+
+# Nuisance parameter list, same call, except the name does not have to be a class name
+data.parameters['M']	   = [-19.2, -30, -10, 0.5,  1, 'nuisance']
+data.parameters['A_planck']          = [ 1.00061,   0.9,   1.1,     0.0025,     1, 'nuisance']
+
+# Derived parameters
+
+data.parameters['z_reio']          = [1, None, None, 0,     1,   'derived']
+data.parameters['Omega_Lambda']    = [1, None, None, 0,     1,   'derived']
+data.parameters['YHe']             = [1, None, None, 0,     1,   'derived']
+data.parameters['H0']              = [0, None, None, 0,     1,   'derived']
+data.parameters['A_s']             = [0, None, None, 0,  1e-9,   'derived']
+data.parameters['S8']          = [0, None, None, 0,     1,   'derived']
+data.parameters['Omega_m']          = [0, None, None, 0,     1,   'derived']
+
+# Other cosmo parameters (fixed parameters, precision parameters, etc.)
+
+data.cosmo_arguments['sBBN file'] = data.path['cosmo']+'/external/bbn/sBBN.dat'
+# BBN file path is automatically set to match CLASS version if 'sBBN file' is requested
+# You can force the code to use the exact BBN file passed above with flag
+#data.custom_bbn_file = True
+
+data.cosmo_arguments['k_pivot'] = 0.05
+
+# The base model features two massless
+# and one massive neutrino with m=0.06eV.
+# The settings below ensures that Neff=3.046
+# and m/omega = 93.14 eV
+data.cosmo_arguments['N_ur'] = 2.0328
+data.cosmo_arguments['N_ncdm'] = 1
+data.cosmo_arguments['m_ncdm'] = 0.06
+data.cosmo_arguments['T_ncdm'] = 0.71611
+data.cosmo_arguments['w0_fld'] = -1.0
+data.cosmo_arguments['Omega_Lambda'] = 0.
+data.cosmo_arguments['fluid_equation_of_state'] = 'GAUSS'
+data.cosmo_arguments['num_basis'] = 40
+data.cosmo_arguments['z0_de_basis'] = '0.0,0.05128205128205128,0.10256410256410256,0.15384615384615385,0.20512820512820512,0.2564102564102564,0.3076923076923077,0.358974358974359,0.41025641025641024,0.4615384615384615,0.5128205128205128,0.5641025641025641,0.6153846153846154,0.6666666666666666,0.717948717948718,0.7692307692307692,0.8205128205128205,0.8717948717948718,0.923076923076923,0.9743589743589743,1.0256410256410255,1.0769230769230769,1.1282051282051282,1.1794871794871795,1.2307692307692308,1.282051282051282,1.3333333333333333,1.3846153846153846,1.435897435897436,1.4871794871794872,1.5384615384615383,1.5897435897435896,1.641025641025641,1.6923076923076923,1.7435897435897436,1.7948717948717947,1.846153846153846,1.8974358974358974,1.9487179487179487,2.0'
+data.cosmo_arguments['epsilon_coeffs'] ='-0.13677601746193233,-0.17219453944883745,-0.171142330399007,-0.13708293398948027,-0.08557398902932369,-0.0297608666340687,0.021621653282532505,0.061713970083184126,0.08637291598451324,0.095213954613361,0.09057739645830845,0.07572387702234638,0.05289439934271583,0.023592787184663566,-0.007907081237683865,-0.033608440305855275,-0.04681991103277013,-0.04670205041809841,-0.03761931093056716,-0.02606393693559802,-0.01725026717493211,-0.012701651492718064,-0.010970333373358471,-0.010166298701163364,-0.009263376045912243,-0.007968266867155778,-0.006418842198074546,-0.004956321907149247,-0.003677476269320468,-0.0023270959625959556,-0.0008079419761066329,0.000573180366492918,0.0014618580447365332,0.0018244662989312323,0.0018605576275019622,0.001781057046226771,0.001713165525957315,0.0016940519885864187,0.0017122187106364138,0.0017507374626999515'
+data.cosmo_arguments['sigma_de'] = 0.08710992823466862
+
+# These two are required to get sigma8 as a derived parameter
+# (class must compute the P(k) until sufficient k)
+data.cosmo_arguments['output'] = 'mPk'
+data.cosmo_arguments['P_k_max_h/Mpc'] = 1.
+
+#------ Mcmc parameters ----
+
+data.N=10
+data.write_step=5
+
+
+#-----Likelihood-Planck_highl_TTTEEE_lite-----
+Planck_highl_TTTEEE_lite.path_clik = '/home/zhou/workspace/planck2018/code/plc_3.0/plc-3.1/../../../baseline/plc_3.0/hi_l/plik_lite/plik_lite_v22_TTTEEE.clik'
+Planck_highl_TTTEEE_lite.A_planck_prior_center = 1
+Planck_highl_TTTEEE_lite.A_planck_prior_variance = 0.0025
+
+
+#-----Likelihood-Planck_lowl_EE-----
+Planck_lowl_EE.path_clik = '/home/zhou/workspace/planck2018/code/plc_3.0/plc-3.1/../../../baseline/plc_3.0/low_l/simall/simall_100x143_offlike5_EE_Aplanck_B.clik'
+
+
+#-----Likelihood-Planck_lowl_TT-----
+Planck_lowl_TT.path_clik = '/home/zhou/workspace/planck2018/code/plc_3.0/plc-3.1/../../../baseline/plc_3.0/low_l/commander/commander_dx12_v3_2_29.clik'
+
+
+#-----Likelihood-bao_dr2-----
+bao_dr2.data_directory = '/home/zhou/workspace/montepython_public-3.6/data'
+bao_dr2.data_file = 'DESI_DR2/desi_data.txt'
+bao_dr2.cov_file = 'DESI_DR2/desi_gaussian_bao_ALL_GCcomb_cov.txt'
+
+
+#-----Likelihood-Pantheon_Plus-----
+Pantheon_Plus.data_directory = '/home/zhou/workspace/montepython_public-3.6/data/Pantheon_plus'
+Pantheon_Plus.settings = 'pantheon_plus.dataset'
+Pantheon_Plus.conflicting_experiments = ['JLA_simple', 'JLA', 'Pantheon', 'Pantheon_Plus_SH0ES']
+Pantheon_Plus.z_min = 0.01
+Pantheon_Plus.use_nuisance = ['M']
+
+
+#-----Likelihood-CC-----
+CC.data = 0.01
+
+
+#-----------Cosmological-arguments---------
+data.cosmo_arguments.update({'sBBN file': '/home/zhou/workspace/class_public-master_env/external/bbn/sBBN.dat', 'k_pivot': 0.05, 'N_ur': 2.0328, 'N_ncdm': 1, 'm_ncdm': 0.06, 'T_ncdm': 0.71611, 'w0_fld': -1.0, 'Omega_Lambda': 0.0, 'fluid_equation_of_state': 'GAUSS', 'num_basis': 40, 'z0_de_basis': '0.0,0.05128205128205128,0.10256410256410256,0.15384615384615385,0.20512820512820512,0.2564102564102564,0.3076923076923077,0.358974358974359,0.41025641025641024,0.4615384615384615,0.5128205128205128,0.5641025641025641,0.6153846153846154,0.6666666666666666,0.717948717948718,0.7692307692307692,0.8205128205128205,0.8717948717948718,0.923076923076923,0.9743589743589743,1.0256410256410255,1.0769230769230769,1.1282051282051282,1.1794871794871795,1.2307692307692308,1.282051282051282,1.3333333333333333,1.3846153846153846,1.435897435897436,1.4871794871794872,1.5384615384615383,1.5897435897435896,1.641025641025641,1.6923076923076923,1.7435897435897436,1.7948717948717947,1.846153846153846,1.8974358974358974,1.9487179487179487,2.0', 'epsilon_coeffs': '-0.13677601746193233,-0.17219453944883745,-0.171142330399007,-0.13708293398948027,-0.08557398902932369,-0.0297608666340687,0.021621653282532505,0.061713970083184126,0.08637291598451324,0.095213954613361,0.09057739645830845,0.07572387702234638,0.05289439934271583,0.023592787184663566,-0.007907081237683865,-0.033608440305855275,-0.04681991103277013,-0.04670205041809841,-0.03761931093056716,-0.02606393693559802,-0.01725026717493211,-0.012701651492718064,-0.010970333373358471,-0.010166298701163364,-0.009263376045912243,-0.007968266867155778,-0.006418842198074546,-0.004956321907149247,-0.003677476269320468,-0.0023270959625959556,-0.0008079419761066329,0.000573180366492918,0.0014618580447365332,0.0018244662989312323,0.0018605576275019622,0.001781057046226771,0.001713165525957315,0.0016940519885864187,0.0017122187106364138,0.0017507374626999515', 'sigma_de': 0.08710992823466862, 'output': 'mPk tCl lCl pCl', 'P_k_max_h/Mpc': 1.0, 'lensing': 'yes', 'l_max_scalars': 2508})
+
+
+#--------Default-Configuration------
+data.path['root']	= '/home/zhou/workspace/montepython_public-3.6'
+data.path['MontePython']	= '/home/zhou/workspace/montepython_public-3.6/montepython'
+data.path['data']	= '/home/zhou/workspace/montepython_public-3.6/data'
+data.path['cosmo']	= '/home/zhou/workspace/class_public-master_env'
+data.path['clik']	= '/home/zhou/workspace/planck2018/code/plc_3.0/plc-3.1'
